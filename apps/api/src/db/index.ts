@@ -4,8 +4,10 @@ import { Pool } from 'pg'
 
 import env from '@/env'
 
+import * as authSchema from './auth-schema'
+
 const pool = new Pool({
   connectionString: env.DATABASE_URL!,
 })
 
-export const db = drizzle({ client: pool })
+export const db = drizzle(pool, { schema: authSchema })
