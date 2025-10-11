@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+        "target": "ESNext",
+        "jsx": "react-jsx",
+        "jsxImportSource": "hono/jsx",
+        "module": "ESNext",
+        "moduleResolution": "Node",
+        "typeRoots": ["./node_modules/@types"],
+        "strict": true,
+        "outDir": "./dist",
+        "allowSyntheticDefaultImports": true,
+        "skipLibCheck": true
+    },
+    "tsc-alias": {
+        "resolveFullPaths": true
+    }
+}
