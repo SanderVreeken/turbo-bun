@@ -21,8 +21,5 @@
     "workspaces": [
         "apps/*",
         "packages/*"
-    ],
-    "dependencies": {
-        "tailwindcss": "^4.1.14"
-    }
+    ]
 }
