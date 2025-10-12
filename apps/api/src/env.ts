@@ -8,9 +8,11 @@ expand(config())
 const EnvSchema = z.object({
   NODE_ENV: z.string().default('development'),
   PORT: z.coerce.number().default(3000),
+  API_URL: z.url(),
   DATABASE_URL: z.url(),
   POLAR_ACCESS_TOKEN: z.string().min(1),
-  POLAR_SUCCESS_URL: z.url().default('http://localhost:3000/success'),
+  POLAR_SUCCESS_URL: z.url(),
+  WEB_URL: z.url(),
 })
 
 export type env = z.infer<typeof EnvSchema>

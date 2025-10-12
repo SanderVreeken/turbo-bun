@@ -3,11 +3,10 @@ import { Polar } from '@polar-sh/sdk'
 import { betterAuth } from 'better-auth'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
 
-import { db } from '@/db/index'
-import env from '@/env'
+import { db } from '@repo/db'
 
 const polarClient = new Polar({
-  accessToken: env.POLAR_ACCESS_TOKEN,
+  accessToken: process.env.POLAR_ACCESS_TOKEN,
   // Use 'sandbox' if you're using the Polar Sandbox environment
   // Remember that access tokens, products, etc. are completely separated between environments.
   // Access tokens obtained in Production are for instance not usable in the Sandbox environment.
@@ -33,7 +32,7 @@ export const auth = betterAuth({
               slug: 'premium',
             },
           ],
-          successUrl: env.POLAR_SUCCESS_URL,
+          successUrl: process.env.POLAR_SUCCESS_URL,
           authenticatedUsersOnly: true,
         }),
         portal(),
@@ -41,5 +40,5 @@ export const auth = betterAuth({
       ],
     }),
   ],
-  trustedOrigins: ['http://localhost:3000', 'http://localhost:5173', 'https://bun-api.sandervreeken.com', 'https://bun-web.sandervreeken.com'],
+  trustedOrigins: [process.env.API_URL!, process.env.WEB_URL!],
 })

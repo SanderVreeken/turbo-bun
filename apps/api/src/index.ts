@@ -1,15 +1,14 @@
 import { serve } from '@hono/node-server'
+import { auth } from '@repo/auth'
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
-
-import { auth } from '@/lib/auth'
 
 import env from './env'
 
 const app = new Hono()
 
 app.use('*', cors({
-  origin: ['http://localhost:5173', 'https://bun-web.sandervreeken.com'],
+  origin: env.WEB_URL,
   credentials: true,
 }))
 
