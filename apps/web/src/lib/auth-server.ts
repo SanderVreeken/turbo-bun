@@ -4,13 +4,10 @@ import { getRequestEvent } from '$app/server';
 import { auth } from '@repo/auth';
 
 export function createSvelteKitAuth() {
-  return betterAuth({
-    ...auth.options,
-    plugins: [
-      ...auth.options.plugins,
-      sveltekitCookies(getRequestEvent)
-    ]
-  });
+	return betterAuth({
+		...auth.options,
+		plugins: [...auth.options.plugins, sveltekitCookies(getRequestEvent)]
+	});
 }
 
 export const svelteAuth = createSvelteKitAuth();

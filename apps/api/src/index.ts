@@ -1,29 +1,15 @@
+import { serve } from '@hono/node-server'
 import { config } from 'dotenv'
 import path from 'node:path'
 
-import { serve } from '@hono/node-server'
-import { Hono } from 'hono'
-import { cors } from 'hono/cors'
+import createApp from './lib/create-app'
 
 // Load environment variables from .env files before importing auth module
 // This ensures that process.env is populated correctly
 config({ path: path.resolve(__dirname, '../../../.env') })
 config({ path: path.resolve(__dirname, '../.env') })
 
-const { auth } = await import('@repo/auth')
-
-const app = new Hono()
-
-app.use('*', cors({
-  origin: process.env.WEB_URL!,
-  credentials: true,
-}))
-
-app.on(['POST', 'GET'], '/api/auth/*', c => auth.handler(c.req.raw))
-
-app.get('/', (c) => {
-  return c.text('Hello Hono!')
-})
+const app = createApp()
 
 async function startServer() {
   const server = serve({

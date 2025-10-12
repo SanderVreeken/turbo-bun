@@ -10,6 +10,16 @@
             "types": "./src/index.ts",
             "development": "./src/index.ts",
             "default": "./dist/index.js"
+        },
+        "./schema": {
+            "types": "./src/schema.ts",
+            "development": "./src/schema.ts",
+            "default": "./dist/schema.js"
+        },
+        "./auth-schema": {
+            "types": "./src/auth-schema.ts",
+            "development": "./src/auth-schema.ts",
+            "default": "./dist/auth-schema.js"
         }
     },
     "main": "./dist/index.js",
@@ -19,6 +29,7 @@
         "pg": "^8.16.3"
     },
     "dependencies": {
+        "@paralleldrive/cuid2": "^2.2.2",
         "dotenv": "^17.2.3"
     }
 }

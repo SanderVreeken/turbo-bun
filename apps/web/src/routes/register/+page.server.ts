@@ -5,7 +5,7 @@ export const actions: Actions = {
 	default: async ({ request }) => {
 		const data = await request.formData();
 
-        console.log(data)
+		console.log(data);
 
 		const response = await svelteAuth.api.signUpEmail({
 			body: {
