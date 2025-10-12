@@ -14,10 +14,15 @@ export const config = antfu(
             'node/prefer-global/process': ['off'],
             'node/no-process-env': ['error'],
             'perfectionist/sort-imports': [
-                'error',
-                {
-                    tsconfigRootDir: '.',
-                },
+            'error',
+            {
+                tsconfigRootDir: '.',
+                groups: [
+                ['builtin', 'external'], 
+                ['internal'],            
+                ],
+                'newlines-between': 'always',
+            },
             ],
         },
     }

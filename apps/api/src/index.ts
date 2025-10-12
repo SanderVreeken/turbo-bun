@@ -1,14 +1,21 @@
+import { config } from 'dotenv'
+import path from 'node:path'
+
 import { serve } from '@hono/node-server'
-import { auth } from '@repo/auth'
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 
-import env from './env'
+// Load environment variables from .env files before importing auth module
+// This ensures that process.env is populated correctly
+config({ path: path.resolve(__dirname, '../../../.env') })
+config({ path: path.resolve(__dirname, '../.env') })
+
+const { auth } = await import('@repo/auth')
 
 const app = new Hono()
 
 app.use('*', cors({
-  origin: env.WEB_URL,
+  origin: process.env.WEB_URL!,
   credentials: true,
 }))
 
@@ -21,7 +28,7 @@ app.get('/', (c) => {
 async function startServer() {
   const server = serve({
     fetch: app.fetch,
-    port: env.PORT || 3000,
+    port: Number(process.env.PORT) || 3000,
   }, (info) => {
     // eslint-disable-next-line no-console
     console.log(`Server is running on http://localhost:${info.port}`)

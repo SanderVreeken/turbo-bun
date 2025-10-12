@@ -1,26 +1,8 @@
 <script lang="ts">
-	import { authClient } from '$lib/auth-client';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import * as Card from '$lib/components/ui/card/index.js';
 	import * as Field from '$lib/components/ui/field/index.js';
 	import { Input } from '$lib/components/ui/input/index.js';
-
-	async function handleSubmit(event: SubmitEvent) {
-		event.preventDefault();
-		const formData = new FormData(event.target as HTMLFormElement);
-
-		try {
-			const { data, error } = await authClient.signUp.email({
-				name: formData.get('name') as string,
-				email: formData.get('email') as string,
-				password: formData.get('password') as string
-			});
-
-			console.log({ data, error });
-		} catch (error: unknown) {
-			alert('Login failed: ' + (error instanceof Error ? error.message : String(error)));
-		}
-	}
 </script>
 
 <div class="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
@@ -31,7 +13,7 @@
 				<Card.Description>Enter your information below to create your account</Card.Description>
 			</Card.Header>
 			<Card.Content>
-				<form on:submit={handleSubmit}>
+				<form method="POST">
 					<Field.Group>
 						<Field.Field>
 							<Field.Label for="name">Full Name</Field.Label>
