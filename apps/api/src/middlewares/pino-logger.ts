@@ -16,9 +16,12 @@ export function pinoLogger(): MiddlewareHandler<AppBindings> {
   return async (c: Context<AppBindings>, next) => {
     const incoming = c.env?.incoming || c.req.raw
     const outgoing = c.env?.outgoing || new Response()
+    const requestId = c.get('requestId')
 
-    if (incoming) {
-      incoming.id = c.var.requestId
+    // Add request ID to the incoming request if available
+    if (incoming && requestId) {
+      // @ts-expect-error - Adding custom property for logging
+      incoming.id = requestId
     }
 
     await new Promise<void>((resolve) => {
@@ -26,11 +29,16 @@ export function pinoLogger(): MiddlewareHandler<AppBindings> {
         level: process.env.LOG_LEVEL || 'info',
         logger: pino(process.env.NODE_ENV === 'production' ? undefined : pretty()),
       })
-      logger(incoming, outgoing, () => resolve())
+      logger(incoming as any, outgoing as any, () => resolve())
     })
 
-    if (incoming?.log) {
-      c.set('logger', incoming.log as Logger)
+    // Extract logger from the request and set it in context
+    if (incoming && 'log' in incoming) {
+      c.set('logger', (incoming as any).log as Logger)
+    }
+    else {
+      // Fallback logger if request logging fails
+      c.set('logger', pino(process.env.NODE_ENV === 'production' ? undefined : pretty()))
     }
 
     await next()

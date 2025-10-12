@@ -2,10 +2,11 @@ import type { Logger } from 'pino'
 
 export interface AppBindings {
   Bindings: {
-    incoming: any
-    outgoing: any
+    incoming?: Request
+    outgoing?: Response
   }
   Variables: {
     logger: Logger
+    requestId: string
   }
 }

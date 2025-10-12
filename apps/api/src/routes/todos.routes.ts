@@ -2,7 +2,6 @@ import { zValidator } from '@hono/zod-validator'
 import { db } from '@repo/db'
 import { insertTodoSchema, todo } from '@repo/db/schema'
 import { HTTPException } from 'hono/http-exception'
-import { StatusCodes } from 'http-status-codes'
 import * as HttpStatusCodes from 'stoker/http-status-codes'
 
 import { createRouter } from '@/lib/create-app'
@@ -13,6 +12,8 @@ todos.post(
   '/todos/add',
   zValidator('json', insertTodoSchema),
   async (c) => {
+    const logger = c.get('logger')
+
     try {
       const data = c.req.valid('json')
 
@@ -20,10 +21,11 @@ todos.post(
         title: data.title,
       }).returning()
 
-      return c.json(response, StatusCodes.OK)
+      logger.info({ todoId: response[0]?.id }, 'Todo created successfully')
+      return c.json(response, HttpStatusCodes.OK)
     }
     catch (error) {
-      console.error('Error creating todo:', error)
+      logger.error({ error: error instanceof Error ? error.message : 'Unknown error' }, 'Failed to create todo')
 
       throw new HTTPException(HttpStatusCodes.INTERNAL_SERVER_ERROR, {
         message: 'Failed to create todo',
