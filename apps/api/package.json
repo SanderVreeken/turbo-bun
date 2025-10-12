@@ -20,9 +20,13 @@
     "zod": "^4.1.12"
   },
   "devDependencies": {
+    "@tailwindcss/forms": "^0.5.10",
+    "@tailwindcss/typography": "^0.5.18",
+    "@tailwindcss/vite": "^4.1.13",
     "@types/bun": "latest",
     "@types/pg": "^8.15.5",
     "drizzle-kit": "^0.31.5",
-    "eslint-plugin-format": "^1.0.2"
+    "eslint-plugin-format": "^1.0.2",
+    "tailwindcss": "^4.1.13"
   }
 }
