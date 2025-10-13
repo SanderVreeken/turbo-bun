@@ -9,9 +9,6 @@ import createApp from './lib/create-app'
 config({ path: path.resolve(__dirname, '../../../.env') })
 config({ path: path.resolve(__dirname, '../.env') })
 
-/**
- * Starts the server with WebSocket support and graceful shutdown handling
- */
 async function startServer() {
   const app = createApp()
 

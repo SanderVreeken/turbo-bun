@@ -1,4 +1,3 @@
-// Types for the Hono app
 import type { OpenAPIHono, RouteConfig, RouteHandler } from '@hono/zod-openapi'
 import type { Logger } from 'pino'
 
