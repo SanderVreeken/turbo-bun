@@ -1,6 +1,6 @@
 import { createId } from '@paralleldrive/cuid2'
 import { pgTable, text, timestamp } from 'drizzle-orm/pg-core'
-import { createInsertSchema } from 'drizzle-zod'
+import { createInsertSchema, createSelectSchema } from 'drizzle-zod'
 
 export const todo = pgTable('todo', {
   id: text('id').primaryKey().$defaultFn(() => createId()),
@@ -12,4 +12,9 @@ export const todo = pgTable('todo', {
     .notNull(),
 })
 
-export const insertTodoSchema = createInsertSchema(todo)
+export const insertTodoSchema = createInsertSchema(todo).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+export const selectTodoSchema = createSelectSchema(todo)

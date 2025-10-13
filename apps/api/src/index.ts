@@ -9,9 +9,12 @@ import createApp from './lib/create-app'
 config({ path: path.resolve(__dirname, '../../../.env') })
 config({ path: path.resolve(__dirname, '../.env') })
 
-const app = createApp()
-
+/**
+ * Starts the server with WebSocket support and graceful shutdown handling
+ */
 async function startServer() {
+  const app = createApp()
+
   const server = serve({
     fetch: app.fetch,
     port: Number(process.env.PORT) || 3000,

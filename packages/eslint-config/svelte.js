@@ -23,5 +23,8 @@ export const config = ts.config(
                 parser: ts.parser,
             },
         },
+        rules: {
+            'svelte/no-navigation-without-resolve': 'off',
+        },
     }
 )
