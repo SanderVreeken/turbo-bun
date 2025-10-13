@@ -1,13 +1,8 @@
+import './env'
+
 import { serve } from '@hono/node-server'
-import { config } from 'dotenv'
-import path from 'node:path'
 
 import createApp from './lib/create-app'
-
-// Load environment variables from .env files before importing auth module
-// This ensures that process.env is populated correctly
-config({ path: path.resolve(__dirname, '../../../.env') })
-config({ path: path.resolve(__dirname, '../.env') })
 
 async function startServer() {
   const app = createApp()

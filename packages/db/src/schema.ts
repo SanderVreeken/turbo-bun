@@ -4,7 +4,7 @@ import { createInsertSchema, createSelectSchema } from 'drizzle-zod'
 
 export const todo = pgTable('todo', {
   id: text('id').primaryKey().$defaultFn(() => createId()),
-  title: text('name').notNull(),
+  title: text('title').notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at')
     .defaultNow()
