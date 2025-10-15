@@ -2,6 +2,7 @@ import { checkout, polar, portal, usage } from '@polar-sh/better-auth'
 import { Polar } from '@polar-sh/sdk'
 import { betterAuth } from 'better-auth'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
+import { Resend } from 'resend'
 
 import { db } from '@repo/db'
 
@@ -13,9 +14,22 @@ const polarClient = new Polar({
   server: 'sandbox',
 })
 
+const resend = new Resend(process.env.RESEND_API_KEY!);
+
 export const auth = betterAuth({
+  emailVerification: {
+    sendVerificationEmail: async ( { user, url, token }, request) => {
+      resend.emails.send({
+        from: 'onboarding@resend.dev',
+        to: 'saf.vreeken@gmail.com',
+        subject: 'Hello World',
+        html: '<p>Congrats on sending your <strong>first email</strong>!</p>'
+      })
+    },
+  },
   emailAndPassword: {
     enabled: true,
+    requireEmailVerification: true,
   },
   database: drizzleAdapter(db, {
     provider: 'pg',
