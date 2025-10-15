@@ -9,32 +9,42 @@ import { VerifyEmail } from './emails/verify-email'
 
 const polarClient = new Polar({
   accessToken: process.env.POLAR_ACCESS_TOKEN,
-  // Use 'sandbox' if you're using the Polar Sandbox environment
-  // Remember that access tokens, products, etc. are completely separated between environments.
-  // Access tokens obtained in Production are for instance not usable in the Sandbox environment.
   server: 'sandbox',
 })
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// --- Lazy-loaded Resend instance ---
+let _resend: Resend | null = null
+function getResend() {
+  if (!_resend) {
+    const key = process.env.RESEND_API_KEY
+    if (!key) throw new Error('Missing RESEND_API_KEY')
+    _resend = new Resend(key)
+  }
+  return _resend
+}
 
 export const auth = betterAuth({
   emailVerification: {
     sendVerificationEmail: async ({ user, url }) => {
+      const resend = getResend()
       await resend.emails.send({
-          from: 'Bun Turbo <no-reply@bun-web.sandervreeken.com>',
-          to: user.email,
-          subject: 'Verify your email address',
-          html: VerifyEmail(user.name, url)
-        })
+        from: 'Bun Turbo <no-reply@bun-web.sandervreeken.com>',
+        to: user.email,
+        subject: 'Verify your email address',
+        html: VerifyEmail(user.name, url),
+      })
     },
   },
+
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: true,
   },
+
   database: drizzleAdapter(db, {
     provider: 'pg',
   }),
+
   plugins: [
     polar({
       client: polarClient,
@@ -55,5 +65,6 @@ export const auth = betterAuth({
       ],
     }),
   ],
+
   trustedOrigins: [process.env.API_URL!, process.env.WEB_URL!],
 })
