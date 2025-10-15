@@ -10,7 +10,7 @@ export const actions: Actions = {
 				name: data.get('name') as string,
 				email: data.get('email') as string,
 				password: data.get('password') as string,
-				callbackURL: `${process.env.WEB_URL}/app`
+				callbackURL: `${process.env.WEB_URL}/login`
 			}
 		});
 	}

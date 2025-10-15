@@ -21,7 +21,7 @@
 						</Field.Field>
 						<Field.Field>
 							<Field.Label for="email">Email</Field.Label>
-							<Input id="email" name="email" type="email" placeholder="m@example.com" required />
+							<Input id="email" name="email" type="email" placeholder="you@domain.com" required />
 							<Field.Description>
 								We'll use this to contact you. We will not share your email with anyone else.
 							</Field.Description>
@@ -35,7 +35,7 @@
 							<Field.Field>
 								<Button type="submit">Create Account</Button>
 								<Field.Description class="px-6 text-center">
-									Already have an account? <a href="#/">Sign in</a>
+									Already have an account? <a href="/login">Sign in</a>
 								</Field.Description>
 							</Field.Field>
 						</Field.Group>
