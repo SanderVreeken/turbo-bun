@@ -1,8 +1,11 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import * as Card from '$lib/components/ui/card/index.js';
 	import * as Field from '$lib/components/ui/field/index.js';
 	import { Input } from '$lib/components/ui/input/index.js';
+	import { enhance } from '$app/forms';
+	import type { SignUpSuccess } from './+page.server';
 </script>
 
 <div class="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
@@ -13,7 +16,21 @@
 				<Card.Description>Enter your information below to create your account</Card.Description>
 			</Card.Header>
 			<Card.Content>
-				<form method="POST">
+				<form
+					method="POST"
+					use:enhance={() => {
+						return async ({ result, update }) => {
+							if (result.type === 'success') {
+								const data = result.data as SignUpSuccess;
+								if (data && data.success) {
+									await goto(data.redirectUrl);
+									return;
+								}
+							}
+							await update();
+						};
+					}}
+				>
 					<Field.Group>
 						<Field.Field>
 							<Field.Label for="name">Full Name</Field.Label>

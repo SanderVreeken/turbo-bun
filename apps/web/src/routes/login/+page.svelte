@@ -6,21 +6,33 @@
 	import { Input } from '$lib/components/ui/input';
 	import { enhance } from '$app/forms';
 	import { goto } from '$app/navigation';
+	import { page } from '$app/state';
 	import type { ActionData } from './$types';
 	import type { SignInSuccess } from './+page.server';
 	import AlertCircleIcon from '@lucide/svelte/icons/alert-circle';
+	import CheckCircleIcon from '@lucide/svelte/icons/check-circle';
 
 	export let form: ActionData;
+
+	$: urlMessage = page.url.searchParams.get('message');
 </script>
 
 <div class="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
 	<div class="w-full max-w-sm">
+		{#if urlMessage}
+			<Alert.Root variant="default" class="border-green-200 bg-green-50 mb-4">
+				<CheckCircleIcon class="h-4 w-4 text-green-600" />
+				<Alert.Title class="text-green-800">Account Created</Alert.Title>
+				<Alert.Description class="text-green-700">
+					<p>{urlMessage}</p>
+				</Alert.Description>
+			</Alert.Root>
+		{/if}
 		<Card.Root>
 			<Card.Header>
 				<Card.Title>Sign in to your account</Card.Title>
 				<Card.Description>Enter your information below to sign in</Card.Description>
 			</Card.Header>
-
 			<Card.Content>
 				<form
 					method="POST"
@@ -32,6 +44,13 @@
 									await goto(data.redirectUrl);
 									return;
 								}
+							}
+							// Remove message from URL if present on unsuccessful sign in attempt
+							if (page.url.searchParams.has('message')) {
+								urlMessage = null;
+								const url = new URL(page.url);
+								url.searchParams.delete('message');
+								await goto(url.toString(), { replaceState: true });
 							}
 							await update();
 						};

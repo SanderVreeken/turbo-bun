@@ -26,15 +26,8 @@ export interface SignInSuccess extends Record<string, unknown> {
 export const actions: Actions = {
 	default: async ({ request }) => {
 		const formData = await request.formData();
-		const email = formData.get('email')?.toString().trim();
-		const password = formData.get('password')?.toString();
-
-		if (!email || !password) {
-			return fail<SignInFormData>(400, {
-				message: 'Email and password are required.',
-				email
-			});
-		}
+		const email = formData.get('email') as string;
+		const password = formData.get('password') as string;
 
 		try {
 			await svelteAuth.api.signInEmail({
@@ -47,7 +40,7 @@ export const actions: Actions = {
 			const betterAuthError = error as Partial<BetterAuthError>;
 			const statusCode = betterAuthError.statusCode ?? 400;
 			const message =
-				betterAuthError.body?.message ?? 'Sign in failed. Please check your credentials.';
+				betterAuthError.body?.message ?? 'Sign in failed';
 
 			return fail<SignInFormData>(statusCode, { message, email });
 		}
