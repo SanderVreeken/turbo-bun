@@ -15,8 +15,7 @@ const polarClient = new Polar({
 export const auth = betterAuth({
   emailVerification: {
     sendVerificationEmail: async ({ user, url }) => {
-      const resend = getResend()
-      await resend.emails.send({
+      await getResend().emails.send({
         from: 'Bun Turbo <no-reply@bun-web.sandervreeken.com>',
         to: user.email,
         subject: 'Verify your email address',
