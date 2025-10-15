@@ -2,26 +2,15 @@ import { checkout, polar, portal, usage } from '@polar-sh/better-auth'
 import { Polar } from '@polar-sh/sdk'
 import { betterAuth } from 'better-auth'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
-import { Resend } from 'resend'
 
 import { db } from '@repo/db'
 import { VerifyEmail } from './emails/verify-email'
+import { getResend } from './resend'
 
 const polarClient = new Polar({
   accessToken: process.env.POLAR_ACCESS_TOKEN,
   server: 'sandbox',
 })
-
-// --- Lazy-loaded Resend instance ---
-let _resend: Resend | null = null
-function getResend() {
-  if (!_resend) {
-    const key = process.env.RESEND_API_KEY
-    if (!key) throw new Error('Missing RESEND_API_KEY')
-    _resend = new Resend(key)
-  }
-  return _resend
-}
 
 export const auth = betterAuth({
   emailVerification: {
@@ -35,16 +24,13 @@ export const auth = betterAuth({
       })
     },
   },
-
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: true,
   },
-
   database: drizzleAdapter(db, {
     provider: 'pg',
   }),
-
   plugins: [
     polar({
       client: polarClient,
@@ -65,6 +51,5 @@ export const auth = betterAuth({
       ],
     }),
   ],
-
   trustedOrigins: [process.env.API_URL!, process.env.WEB_URL!],
 })
