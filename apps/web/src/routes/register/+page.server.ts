@@ -34,15 +34,17 @@ export const actions: Actions = {
 
 		try {
 			await svelteAuth.api.signUpEmail({
-				body: { name, email, password, callbackURL: `${process.env.WEB_URL}/login` },
+				body: { name, email, password, callbackURL: `${process.env.WEB_URL}/login` }
 			});
 
-			return { success: true, redirectUrl: '/login?message=Please check your email to verify your account' } satisfies SignUpSuccess;
+			return {
+				success: true,
+				redirectUrl: '/login?message=Please check your email to verify your account'
+			} satisfies SignUpSuccess;
 		} catch (error: unknown) {
 			const betterAuthError = error as Partial<BetterAuthError>;
 			const statusCode = betterAuthError.statusCode ?? 400;
-			const message =
-				betterAuthError.body?.message ?? 'Sign up failed';
+			const message = betterAuthError.body?.message ?? 'Sign up failed';
 
 			return fail<SignUpFormData>(statusCode, { message, email });
 		}

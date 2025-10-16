@@ -12,9 +12,9 @@
 	import AlertCircleIcon from '@lucide/svelte/icons/alert-circle';
 	import CheckCircleIcon from '@lucide/svelte/icons/check-circle';
 
-	export let form: ActionData;
+	let { form }: { form: ActionData } = $props();
 
-	$: urlMessage = page.url.searchParams.get('message');
+	let urlMessage = $state(page.url.searchParams.get('message'));
 </script>
 
 <div class="flex min-h-svh w-full items-center justify-center p-6 md:p-10">

@@ -39,8 +39,7 @@ export const actions: Actions = {
 		} catch (error: unknown) {
 			const betterAuthError = error as Partial<BetterAuthError>;
 			const statusCode = betterAuthError.statusCode ?? 400;
-			const message =
-				betterAuthError.body?.message ?? 'Sign in failed';
+			const message = betterAuthError.body?.message ?? 'Sign in failed';
 
 			return fail<SignInFormData>(statusCode, { message, email });
 		}
