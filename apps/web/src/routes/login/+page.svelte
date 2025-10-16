@@ -78,7 +78,12 @@
 							/>
 						</Field.Field>
 						<Field.Field>
-							<Field.Label for="password">Password</Field.Label>
+							<div class="flex items-center">
+								<Field.Label for="password">Password</Field.Label>
+								<a href="/forgot-password" class="ml-auto inline-block text-sm underline">
+									Forgot your password?
+								</a>
+							</div>
 							<Input id="password" name="password" type="password" required />
 						</Field.Field>
 						<Field.Field>
