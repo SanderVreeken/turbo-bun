@@ -19,9 +19,8 @@
 	} = $props();
 	const sidebar = Sidebar.useSidebar();
 
-	import { authClient } from "$lib/auth-client.js";
+	import { authClient } from '$lib/auth-client.js';
 	const session = authClient.useSession();
-	console.log($session.data)
 </script>
 
 <Sidebar.Menu>
@@ -87,7 +86,12 @@
 					</DropdownMenu.Item>
 				</DropdownMenu.Group>
 				<DropdownMenu.Separator />
-				<DropdownMenu.Item onSelect={() => authClient.signOut()}>
+				<DropdownMenu.Item
+					onSelect={async () => {
+						await authClient.signOut();
+						window.location.href = '/auth/login';
+					}}
+				>
 					<LogOutIcon />
 					Log out
 				</DropdownMenu.Item>
