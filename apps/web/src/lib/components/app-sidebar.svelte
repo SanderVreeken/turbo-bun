@@ -1,181 +1,169 @@
-<script lang="ts">
-	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
-	import type { ComponentProps } from 'svelte';
+<script lang="ts" module>
+	import AudioWaveformIcon from '@lucide/svelte/icons/audio-waveform';
+	import BookOpenIcon from '@lucide/svelte/icons/book-open';
+	import BotIcon from '@lucide/svelte/icons/bot';
+	import ChartPieIcon from '@lucide/svelte/icons/chart-pie';
+	import CommandIcon from '@lucide/svelte/icons/command';
+	import FrameIcon from '@lucide/svelte/icons/frame';
+	import GalleryVerticalEndIcon from '@lucide/svelte/icons/gallery-vertical-end';
+	import MapIcon from '@lucide/svelte/icons/map';
+	import Settings2Icon from '@lucide/svelte/icons/settings-2';
+	import SquareTerminalIcon from '@lucide/svelte/icons/square-terminal';
 
 	const data = {
+		user: {
+			name: 'shadcn',
+			email: 'm@example.com',
+			avatar: '/avatars/shadcn.jpg'
+		},
+		teams: [
+			{
+				name: 'Acme Inc',
+				logo: GalleryVerticalEndIcon,
+				plan: 'Enterprise'
+			},
+			{
+				name: 'Acme Corp.',
+				logo: AudioWaveformIcon,
+				plan: 'Startup'
+			},
+			{
+				name: 'Evil Corp.',
+				logo: CommandIcon,
+				plan: 'Free'
+			}
+		],
 		navMain: [
 			{
-				title: 'Getting Started',
+				title: 'Playground',
 				url: '#',
+				icon: SquareTerminalIcon,
+				isActive: true,
 				items: [
 					{
-						title: 'Installation',
+						title: 'History',
 						url: '#'
 					},
 					{
-						title: 'Project Structure',
+						title: 'Starred',
+						url: '#'
+					},
+					{
+						title: 'Settings',
 						url: '#'
 					}
 				]
 			},
 			{
-				title: 'Building Your Application',
+				title: 'Models',
 				url: '#',
+				icon: BotIcon,
 				items: [
 					{
-						title: 'Routing',
+						title: 'Genesis',
 						url: '#'
 					},
 					{
-						title: 'Data Fetching',
-						url: '#',
-						isActive: true
-					},
-					{
-						title: 'Rendering',
+						title: 'Explorer',
 						url: '#'
 					},
 					{
-						title: 'Caching',
-						url: '#'
-					},
-					{
-						title: 'Styling',
-						url: '#'
-					},
-					{
-						title: 'Optimizing',
-						url: '#'
-					},
-					{
-						title: 'Configuring',
-						url: '#'
-					},
-					{
-						title: 'Testing',
-						url: '#'
-					},
-					{
-						title: 'Authentication',
-						url: '#'
-					},
-					{
-						title: 'Deploying',
-						url: '#'
-					},
-					{
-						title: 'Upgrading',
-						url: '#'
-					},
-					{
-						title: 'Examples',
+						title: 'Quantum',
 						url: '#'
 					}
 				]
 			},
 			{
-				title: 'API Reference',
+				title: 'Documentation',
 				url: '#',
+				icon: BookOpenIcon,
 				items: [
 					{
-						title: 'Components',
+						title: 'Introduction',
 						url: '#'
 					},
 					{
-						title: 'File Conventions',
+						title: 'Get Started',
 						url: '#'
 					},
 					{
-						title: 'Functions',
+						title: 'Tutorials',
 						url: '#'
 					},
 					{
-						title: 'next.config.js Options',
-						url: '#'
-					},
-					{
-						title: 'CLI',
-						url: '#'
-					},
-					{
-						title: 'Edge Runtime',
+						title: 'Changelog',
 						url: '#'
 					}
 				]
 			},
 			{
-				title: 'Architecture',
+				title: 'Settings',
 				url: '#',
+				icon: Settings2Icon,
 				items: [
 					{
-						title: 'Accessibility',
+						title: 'General',
 						url: '#'
 					},
 					{
-						title: 'Fast Refresh',
+						title: 'Team',
 						url: '#'
 					},
 					{
-						title: 'Next.js Compiler',
+						title: 'Billing',
 						url: '#'
 					},
 					{
-						title: 'Supported Browsers',
-						url: '#'
-					},
-					{
-						title: 'Turbopack',
-						url: '#'
-					}
-				]
-			},
-			{
-				title: 'Community',
-				url: '#',
-				items: [
-					{
-						title: 'Contribution Guide',
+						title: 'Limits',
 						url: '#'
 					}
 				]
 			}
+		],
+		projects: [
+			{
+				name: 'Design Engineering',
+				url: '#',
+				icon: FrameIcon
+			},
+			{
+				name: 'Sales & Marketing',
+				url: '#',
+				icon: ChartPieIcon
+			},
+			{
+				name: 'Travel',
+				url: '#',
+				icon: MapIcon
+			}
 		]
 	};
-
-	let { ref = $bindable(null), ...restProps }: ComponentProps<typeof Sidebar.Root> = $props();
 </script>
 
-<Sidebar.Root bind:ref {...restProps}>
+<script lang="ts">
+	import NavMain from './nav-main.svelte';
+	import NavProjects from './nav-projects.svelte';
+	import NavUser from './nav-user.svelte';
+	import TeamSwitcher from './team-switcher.svelte';
+	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
+	import type { ComponentProps } from 'svelte';
+	let {
+		ref = $bindable(null),
+		collapsible = 'icon',
+		...restProps
+	}: ComponentProps<typeof Sidebar.Root> = $props();
+</script>
+
+<Sidebar.Root {collapsible} {...restProps}>
+	<Sidebar.Header>
+		<TeamSwitcher teams={data.teams} />
+	</Sidebar.Header>
 	<Sidebar.Content>
-		<Sidebar.Group>
-			<Sidebar.GroupLabel>Table of Contents</Sidebar.GroupLabel>
-			<Sidebar.GroupContent>
-				<Sidebar.Menu>
-					{#each data.navMain as item (item.title)}
-						<Sidebar.MenuItem>
-							<Sidebar.MenuButton class="font-medium">
-								{#snippet child({ props })}
-									<a href={item.url} {...props}>
-										{item.title}
-									</a>
-								{/snippet}
-							</Sidebar.MenuButton>
-							{#if item.items?.length}
-								<Sidebar.MenuSub>
-									{#each item.items as subItem (subItem.title)}
-										<Sidebar.MenuSubItem>
-											<Sidebar.MenuSubButton href={subItem.url} isActive={subItem.isActive}>
-												{subItem.title}
-											</Sidebar.MenuSubButton>
-										</Sidebar.MenuSubItem>
-									{/each}
-								</Sidebar.MenuSub>
-							{/if}
-						</Sidebar.MenuItem>
-					{/each}
-				</Sidebar.Menu>
-			</Sidebar.GroupContent>
-		</Sidebar.Group>
+		<NavMain items={data.navMain} />
+		<NavProjects projects={data.projects} />
 	</Sidebar.Content>
+	<Sidebar.Footer>
+		<NavUser user={data.user} />
+	</Sidebar.Footer>
 	<Sidebar.Rail />
 </Sidebar.Root>
