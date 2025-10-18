@@ -18,6 +18,10 @@
 		};
 	} = $props();
 	const sidebar = Sidebar.useSidebar();
+
+	import { authClient } from "$lib/auth-client.js";
+	const session = authClient.useSession();
+	console.log($session.data)
 </script>
 
 <Sidebar.Menu>
@@ -35,8 +39,8 @@
 							<Avatar.Fallback class="rounded-lg">CN</Avatar.Fallback>
 						</Avatar.Root>
 						<div class="grid flex-1 text-left text-sm leading-tight">
-							<span class="truncate font-medium">{user.name}</span>
-							<span class="truncate text-xs">{user.email}</span>
+							<span class="truncate font-medium">{$session.data?.user.name}</span>
+							<span class="truncate text-xs">{$session.data?.user.email}</span>
 						</div>
 						<ChevronsUpDownIcon class="ml-auto size-4" />
 					</Sidebar.MenuButton>
@@ -83,7 +87,7 @@
 					</DropdownMenu.Item>
 				</DropdownMenu.Group>
 				<DropdownMenu.Separator />
-				<DropdownMenu.Item>
+				<DropdownMenu.Item onSelect={() => authClient.signOut()}>
 					<LogOutIcon />
 					Log out
 				</DropdownMenu.Item>

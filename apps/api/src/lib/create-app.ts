@@ -32,7 +32,7 @@ export default function createApp() {
   const app = createRouter()
 
   app.use(cors({
-    origin: [process.env.BETTER_AUTH_URL!],
+    origin: [process.env.BETTER_AUTH_URL!, process.env.WEB_URL!],
     credentials: true,
     allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowHeaders: ['Content-Type', 'Authorization'],
