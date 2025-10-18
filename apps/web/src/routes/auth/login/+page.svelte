@@ -7,7 +7,7 @@
 	import { enhance } from '$app/forms';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
-	import type { ActionData } from './$types';
+	import { type ActionData } from './$types';
 	import type { SignInSuccess } from './+page.server';
 	import AlertCircleIcon from '@lucide/svelte/icons/alert-circle';
 	import CheckCircleIcon from '@lucide/svelte/icons/check-circle';
@@ -91,7 +91,7 @@
 						</Field.Field>
 						<Field.Field>
 							<Field.Description class="px-6 text-center text-sm">
-								Don't have an account yet? <a href="/register" class="underline">Create one</a>
+								Don't have an account yet? <a href="/auth/register" class="underline">Create one</a>
 							</Field.Description>
 						</Field.Field>
 					</Field.Group>
