@@ -53,8 +53,8 @@ export const auth = betterAuth({
   ],
   advanced: {
     crossSubDomainCookies: {
-        enabled: true,
-        domain: process.env.COOKIE_DOMAIN!,
+        enabled: process.env.NODE_ENV === 'production',
+        domain: process.env.NODE_ENV === 'production' ? 'sandervreeken.com' : undefined,
     },
   },
   trustedOrigins: [process.env.API_URL!, process.env.WEB_URL!],

@@ -4,8 +4,12 @@ import { defineConfig } from 'vite';
 import * as dotenv from 'dotenv';
 import * as path from 'path';
 
-dotenv.config({ path: path.resolve(__dirname, '../../.env') });
-dotenv.config({ path: path.resolve(__dirname, '.env') });
+// Load environment variables and make them available to all Node.js processes
+const rootEnv = dotenv.config({ path: path.resolve(__dirname, '../../.env') });
+const localEnv = dotenv.config({ path: path.resolve(__dirname, '.env') });
+
+// Ensure environment variables are available during build
+Object.assign(process.env, rootEnv.parsed, localEnv.parsed);
 
 export default defineConfig({
 	plugins: [tailwindcss(), sveltekit()]
