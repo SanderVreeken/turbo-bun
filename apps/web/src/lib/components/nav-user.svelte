@@ -8,19 +8,15 @@
 	import * as Avatar from '$lib/components/ui/avatar/index.js';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
 	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
-	let {
-		user
-	}: {
-		user: {
-			name: string;
-			email: string;
-			avatar: string;
-		};
-	} = $props();
 	const sidebar = Sidebar.useSidebar();
-
 	import { authClient } from '$lib/auth-client.js';
+	import { getAvatarInitials } from '@/utils/string';
+	import { derived } from 'svelte/store';
 	const session = authClient.useSession();
+	const userAvatar = derived(session, ($session) => $session.data?.user.image);
+	const userEmail = derived(session, ($session) => $session.data?.user.email);
+	const userName = derived(session, ($session) => $session.data?.user.name);
+	const initials = derived(userName, ($userName) => getAvatarInitials($userName));
 </script>
 
 <Sidebar.Menu>
@@ -34,12 +30,12 @@
 						{...props}
 					>
 						<Avatar.Root class="size-8 rounded-lg">
-							<Avatar.Image src={user.avatar} alt={user.name} />
-							<Avatar.Fallback class="rounded-lg">CN</Avatar.Fallback>
+							<Avatar.Image src={$userAvatar} alt={$userName} />
+							<Avatar.Fallback class="rounded-lg">{$initials}</Avatar.Fallback>
 						</Avatar.Root>
 						<div class="grid flex-1 text-left text-sm leading-tight">
-							<span class="truncate font-medium">{$session.data?.user.name}</span>
-							<span class="truncate text-xs">{$session.data?.user.email}</span>
+							<span class="truncate font-medium">{$userName}</span>
+							<span class="truncate text-xs">{$userEmail}</span>
 						</div>
 						<ChevronsUpDownIcon class="ml-auto size-4" />
 					</Sidebar.MenuButton>
@@ -54,12 +50,12 @@
 				<DropdownMenu.Label class="p-0 font-normal">
 					<div class="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
 						<Avatar.Root class="size-8 rounded-lg">
-							<Avatar.Image src={user.avatar} alt={user.name} />
-							<Avatar.Fallback class="rounded-lg">CN</Avatar.Fallback>
+							<Avatar.Image src={$userAvatar} alt={$userName} />
+							<Avatar.Fallback class="rounded-lg">{$initials}</Avatar.Fallback>
 						</Avatar.Root>
 						<div class="grid flex-1 text-left text-sm leading-tight">
-							<span class="truncate font-medium">{user.name}</span>
-							<span class="truncate text-xs">{user.email}</span>
+							<span class="truncate font-medium">{$userName}</span>
+							<span class="truncate text-xs">{$userEmail}</span>
 						</div>
 					</div>
 				</DropdownMenu.Label>
