@@ -2,6 +2,7 @@
 	import AppSidebar from '$lib/components/app-sidebar.svelte';
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index.js';
 	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
+	import KanbanBoard from '$lib/components/kanban-board.svelte';
 </script>
 
 <Sidebar.Provider>
@@ -18,7 +19,7 @@
 			</Breadcrumb.Root>
 			<Sidebar.Trigger class="-mr-1 ml-auto rotate-180" />
 		</header>
-		<div class="flex flex-1 flex-col"></div>
+		<KanbanBoard />
 	</Sidebar.Inset>
 	<AppSidebar side="right" />
 </Sidebar.Provider>
