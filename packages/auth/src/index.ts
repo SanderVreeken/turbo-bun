@@ -13,6 +13,7 @@ const polarClient = new Polar({
 })
 
 export const auth = betterAuth({
+  baseURL: process.env.API_URL!,
   emailVerification: {
     sendVerificationEmail: async ({ user, url }) => {
       await getResend().emails.send({
