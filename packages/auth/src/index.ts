@@ -5,18 +5,19 @@ import { drizzleAdapter } from 'better-auth/adapters/drizzle'
 
 import { db } from '@repo/db'
 import { VerifyEmail } from './emails/verify-email'
-import { getResend } from './resend'
+import { Resend } from 'resend'
 
 const polarClient = new Polar({
   accessToken: process.env.POLAR_ACCESS_TOKEN,
   server: 'sandbox',
 })
+const resend = new Resend(process.env.RESEND_API_KEY)
 
 export const auth = betterAuth({
   baseURL: process.env.API_URL!,
   emailVerification: {
     sendVerificationEmail: async ({ user, url }) => {
-      await getResend().emails.send({
+      await resend.emails.send({
         from: 'Bun Turbo <no-reply@bun-web.sandervreeken.com>',
         to: user.email,
         subject: 'Verify your email address',
