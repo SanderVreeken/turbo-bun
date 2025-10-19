@@ -50,5 +50,11 @@ export const auth = betterAuth({
       ],
     }),
   ],
+  advanced: {
+    crossSubDomainCookies: {
+        enabled: true,
+        domain: process.env.WEB_URL!, 
+    },
+  },
   trustedOrigins: [process.env.API_URL!, process.env.WEB_URL!],
 })
