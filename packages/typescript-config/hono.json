@@ -9,6 +9,7 @@
         "strict": true,
         "outDir": "./dist",
         "allowSyntheticDefaultImports": true,
+        "esModuleInterop": true,
         "skipLibCheck": true
     },
     "tsc-alias": {

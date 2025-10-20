@@ -3,6 +3,10 @@
   "version": "0.0.0",
   "private": true,
   "license": "MIT",
+  "exports": {
+    "./hono.json": "./hono.json",
+    "./svelte.json": "./svelte.json"
+  },
   "publishConfig": {
     "access": "public"
   }
