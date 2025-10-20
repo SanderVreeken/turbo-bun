@@ -1,5 +1,5 @@
 {
-  "extends": "../../packages/typescript-config/hono.json",
+  "extends": "@repo/typescript-config/hono.json",
   "compilerOptions": {
     "paths": {
       "@/*": ["./src/*"]

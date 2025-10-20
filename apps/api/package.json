@@ -29,6 +29,7 @@
     "zod": "^4.1.12"
   },
   "devDependencies": {
+    "@repo/typescript-config": "*",
     "@tailwindcss/vite": "^4.1.13",
     "@types/bun": "latest",
     "@types/pg": "^8.15.5",
