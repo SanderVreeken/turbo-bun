@@ -199,7 +199,7 @@
 
 <div class="flex flex-1 flex-col gap-6 p-6">
 	<div class="flex items-center justify-between">
-		<h1 class="text-2xl font-semibold tracking-tight">Kanban Board</h1>
+		<h1 class="text-2xl font-semibold tracking-tight">Kanban Board Title</h1>
 		<Button onclick={() => (showNewTaskDialog = true)} class="gap-2">
 			<Plus class="h-4 w-4" />
 			Add Task
