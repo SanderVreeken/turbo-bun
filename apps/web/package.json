@@ -23,6 +23,7 @@
 	"devDependencies": {
 		"@eslint/js": "^9.36.0",
 		"@internationalized/date": "^3.8.1",
+		"@repo/eslint-config": "*",
 		"@repo/typescript-config": "*",
 		"@lucide/svelte": "^0.544.0",
 		"@sveltejs/adapter-node": "^5.3.2",
