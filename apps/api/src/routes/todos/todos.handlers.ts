@@ -31,12 +31,10 @@ export const add: AppRouteHandler<AddRoute> = async (c) => {
   const body = c.req.valid('json')
   const user = c.get('user')
 
-  console.log(user)
-
   try {
     const response = await db.insert(todo).values({
       title: body.title,
-      createdBy: user.id
+      createdBy: user.id,
     }).returning()
 
     return c.json(response[0], HttpStatusCodes.OK)
