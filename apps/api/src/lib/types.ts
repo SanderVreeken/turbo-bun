@@ -1,4 +1,5 @@
 import type { OpenAPIHono, RouteConfig, RouteHandler } from '@hono/zod-openapi'
+import type { Session, User } from '@repo/db/auth-schema'
 import type { Logger } from 'pino'
 
 export interface AppBindings {
@@ -8,6 +9,8 @@ export interface AppBindings {
   }
   Variables: {
     logger: Logger
+    user: User
+    session: Session
   }
 }
 
