@@ -5,7 +5,7 @@ import { notFound, onError, serveEmojiFavicon } from 'stoker/middlewares'
 import { defaultHook } from 'stoker/openapi'
 
 import { pinoLogger } from '@/middlewares/pino-logger'
-import todos from '@/routes/todos/todos.index'
+import tasks from '@/routes/tasks/tasks.index'
 
 import type { AppBindings } from './types'
 
@@ -47,7 +47,7 @@ export default function createApp() {
   app.on(['POST', 'GET'], '/api/auth/*', c =>
     auth.handler(c.req.raw))
 
-  const routes = [todos]
+  const routes = [tasks]
   routes.forEach((route) => {
     app.route('/', route)
   })

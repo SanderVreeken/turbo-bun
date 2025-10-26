@@ -6,7 +6,7 @@ import { user } from './auth-schema';
 export const statusEnum = pgEnum('status', ['to-do', 'in-progress', 'review', 'done']);
 export const priorityEnum = pgEnum('priority', ['low', 'medium', 'high']);
 
-export const todo = pgTable('todo', {
+export const task = pgTable('task', {
   id: text('id').primaryKey().$defaultFn(() => createId()),
   title: text('title').notNull(),
   description: text('description'),
@@ -22,12 +22,12 @@ export const todo = pgTable('todo', {
     .notNull(),
 })
 
-export type Todo = typeof todo.$inferSelect
+export type Task = typeof task.$inferSelect
 
-export const insertTodoSchema = createInsertSchema(todo).omit({
+export const insertTaskSchema = createInsertSchema(task).omit({
   id: true,
   createdBy: true,
   createdAt: true,
   updatedAt: true,
 });
-export const selectTodoSchema = createSelectSchema(todo)
+export const selectTaskSchema = createSelectSchema(task)

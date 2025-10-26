@@ -3,13 +3,13 @@
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index.js';
 	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
 	import KanbanBoard from '$lib/components/kanban-board.svelte';
-	import { todos } from '@/stores/todos.js';
+	import { tasks } from '@/stores/tasks.js';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
 
 	$effect(() => {
-		todos.set(data.todos);
+		tasks.set(data.tasks);
 	});
 </script>
 

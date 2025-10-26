@@ -5,16 +5,16 @@
 	import Label from '$lib/components/ui/label/label.svelte';
 	import * as Dialog from '$lib/components/ui/dialog/index.js';
 	import { Plus, Pencil, Trash2 } from '@lucide/svelte';
-	import { todos } from '@/stores/todos';
-	import type { Todo } from '@repo/db/schema';
+	import { tasks } from '@/stores/tasks';
+	import type { Task } from '@repo/db/schema';
 
-	type TodoStatus = Todo['status'];
-	type TodoPriority = Todo['priority'];
+	type TaskStatus = Task['status'];
+	type TaskPriority = Task['priority'];
 
 	interface Column {
 		id: string;
 		title: string;
-		status: TodoStatus;
+		status: TaskStatus;
 		color: string;
 	}
 
@@ -27,19 +27,19 @@
 
 	let showNewTaskDialog = $state(false);
 	let showEditTaskDialog = $state(false);
-	let editingTask: Todo | null = $state(null);
+	let editingTask: Task | null = $state(null);
 	let newTask = $state({
 		title: '',
 		description: '',
-		priority: 'medium' as TodoPriority,
-		status: 'to-do' as TodoStatus
+		priority: 'medium' as TaskPriority,
+		status: 'to-do' as TaskStatus
 	});
 
-	function getTasksForColumn(status: TodoStatus) {
-		return $todos.filter((task) => task.status === status);
+	function getTasksForColumn(status: TaskStatus) {
+		return $tasks.filter((task) => task.status === status);
 	}
 
-	function getPriorityColor(priority: TodoPriority) {
+	function getPriorityColor(priority: TaskPriority) {
 		switch (priority) {
 			case 'high':
 				return 'border-l-destructive';
@@ -52,7 +52,7 @@
 		}
 	}
 
-	function getPriorityBadgeColor(priority: TodoPriority) {
+	function getPriorityBadgeColor(priority: TaskPriority) {
 		switch (priority) {
 			case 'high':
 				return 'bg-destructive/10 text-destructive border-destructive/20';
@@ -69,7 +69,7 @@
 		if (!newTask.title.trim()) return;
 
 		// TODO: Call API to create task instead of local state
-		const task: Partial<Todo> = {
+		const task: Partial<Task> = {
 			id: Date.now().toString(),
 			title: newTask.title,
 			description: newTask.description || null,
@@ -78,13 +78,13 @@
 			createdAt: new Date()
 		};
 
-		todos.update((current) => [...current, task as Todo]);
+		tasks.update((current) => [...current, task as Task]);
 		resetNewTask();
 		showNewTaskDialog = false;
 	}
 
-	function updateTask(task: Todo) {
-		todos.update((current) => {
+	function updateTask(task: Task) {
+		tasks.update((current) => {
 			const index = current.findIndex((t) => t.id === task.id);
 			if (index !== -1) {
 				current[index] = task;
@@ -97,11 +97,11 @@
 	}
 
 	function deleteTask(taskId: string) {
-		todos.update((current) => current.filter((t) => t.id !== taskId));
+		tasks.update((current) => current.filter((t) => t.id !== taskId));
 	}
 
-	function moveTask(taskId: string, newStatus: TodoStatus) {
-		todos.update((current) => {
+	function moveTask(taskId: string, newStatus: TaskStatus) {
+		tasks.update((current) => {
 			const task = current.find((t) => t.id === taskId);
 			if (task) {
 				task.status = newStatus;
@@ -120,7 +120,7 @@
 		};
 	}
 
-	function startEditing(task: Todo) {
+	function startEditing(task: Task) {
 		editingTask = { ...task };
 		showEditTaskDialog = true;
 	}
@@ -140,7 +140,7 @@
 		event.preventDefault();
 	}
 
-	function handleDrop(event: DragEvent, status: Todo['status']) {
+	function handleDrop(event: DragEvent, status: Task['status']) {
 		event.preventDefault();
 		const taskId = event.dataTransfer?.getData('text/plain');
 		if (taskId) {

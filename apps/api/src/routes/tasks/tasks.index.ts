@@ -1,8 +1,8 @@
 import { createRouter } from '@/lib/create-app'
 import { authMiddleware } from '@/middlewares/auth'
 
-import * as handlers from './todos.handlers'
-import * as routes from './todos.routes'
+import * as handlers from './tasks.handlers'
+import * as routes from './tasks.routes'
 
 const router = createRouter()
 

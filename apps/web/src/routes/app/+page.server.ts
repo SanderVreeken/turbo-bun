@@ -1,7 +1,7 @@
 export const load = async ({ fetch }) => {
-	const response = await fetch('/api/todos');
+	const response = await fetch('/api/tasks');
 
-	const todos = await response.json();
+	const tasks = await response.json();
 
-	return { todos };
+	return { tasks };
 };
