@@ -1,6 +1,7 @@
 {
-  "name": "api",
+  "name": "@turbo-bun/api",
   "type": "module",
+  "types": "src/lib/types.ts",
   "scripts": {
     "dev": "bun run --hot src/index.ts",
     "start": "node dist/index.js",
