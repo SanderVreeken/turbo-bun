@@ -34,12 +34,16 @@ export const add: AppRouteHandler<AddRoute> = async (c) => {
   try {
     const response = await db.insert(todo).values({
       title: body.title,
+      description: body.description,
+      status: body.status,
+      priority: body.priority,
       createdBy: user.id,
     }).returning()
 
     return c.json(response[0], HttpStatusCodes.OK)
   }
   catch (error) {
+    console.error(error)
     if (error instanceof HTTPException) {
       throw error
     }
