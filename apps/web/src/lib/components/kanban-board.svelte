@@ -65,23 +65,23 @@
 		}
 	}
 
-	function createTask() {
-		if (!newTask.title.trim()) return;
+	// function createTask() {
+	// 	if (!newTask.title.trim()) return;
 
-		// TODO: Call API to create task instead of local state
-		const task: Partial<Task> = {
-			id: Date.now().toString(),
-			title: newTask.title,
-			description: newTask.description || null,
-			status: newTask.status,
-			priority: newTask.priority,
-			createdAt: new Date()
-		};
+	// 	// TODO: Call API to create task instead of local state
+	// 	const task: Partial<Task> = {
+	// 		id: Date.now().toString(),
+	// 		title: newTask.title,
+	// 		description: newTask.description || null,
+	// 		status: newTask.status,
+	// 		priority: newTask.priority,
+	// 		createdAt: new Date()
+	// 	};
 
-		tasks.update((current) => [...current, task as Task]);
-		resetNewTask();
-		showNewTaskDialog = false;
-	}
+	// 	tasks.update((current) => [...current, task as Task]);
+	// 	resetNewTask();
+	// 	showNewTaskDialog = false;
+	// }
 
 	function updateTask(task: Task) {
 		tasks.update((current) => {
@@ -111,14 +111,14 @@
 		});
 	}
 
-	function resetNewTask() {
-		newTask = {
-			title: '',
-			description: '',
-			priority: 'medium',
-			status: 'to-do'
-		};
-	}
+	// function resetNewTask() {
+	// 	newTask = {
+	// 		title: '',
+	// 		description: '',
+	// 		priority: 'medium',
+	// 		status: 'to-do'
+	// 	};
+	// }
 
 	function startEditing(task: Task) {
 		editingTask = { ...task };
@@ -235,69 +235,79 @@
 	<!-- New Task Dialog -->
 	<Dialog.Root bind:open={showNewTaskDialog}>
 		<Dialog.Content class="sm:max-w-md">
-			<Dialog.Header>
-				<Dialog.Title>Add New Task</Dialog.Title>
-				<Dialog.Description>Create a new task and assign it to a column.</Dialog.Description>
-			</Dialog.Header>
+			<form method="POST">
+				<Dialog.Header>
+					<Dialog.Title>Add New Task</Dialog.Title>
+					<Dialog.Description>Create a new task and assign it to a column.</Dialog.Description>
+				</Dialog.Header>
 
-			<div class="space-y-6 py-6">
-				<div class="space-y-2">
-					<Label for="new-title">Title</Label>
-					<Input id="new-title" bind:value={newTask.title} placeholder="Enter task title" />
-				</div>
-
-				<div class="space-y-2">
-					<Label for="new-description">Description</Label>
-					<textarea
-						id="new-description"
-						bind:value={newTask.description}
-						class="flex min-h-20 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-						placeholder="Enter task description"
-					></textarea>
-				</div>
-
-				<div class="grid grid-cols-2 gap-4">
+				<div class="space-y-6 py-6">
 					<div class="space-y-2">
-						<Label for="new-priority">Priority</Label>
-						<select
-							id="new-priority"
-							bind:value={newTask.priority}
-							class="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-						>
-							<option value="low">Low</option>
-							<option value="medium">Medium</option>
-							<option value="high">High</option>
-						</select>
+						<Label for="new-title">Title</Label>
+						<Input
+							id="new-title"
+							name="title"
+							bind:value={newTask.title}
+							placeholder="Enter task title"
+						/>
 					</div>
 
 					<div class="space-y-2">
-						<Label for="new-status">Status</Label>
-						<select
-							id="new-status"
-							bind:value={newTask.status}
-							class="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-						>
-							<option value="to-do">To Do</option>
-							<option value="in-progress">In Progress</option>
-							<option value="review">Review</option>
-							<option value="done">Done</option>
-						</select>
+						<Label for="new-description">Description</Label>
+						<textarea
+							id="new-description"
+							name="description"
+							bind:value={newTask.description}
+							class="flex min-h-20 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+							placeholder="Enter task description"
+						></textarea>
+					</div>
+
+					<div class="grid grid-cols-2 gap-4">
+						<div class="space-y-2">
+							<Label for="new-priority">Priority</Label>
+							<select
+								id="new-priority"
+								name="priority"
+								bind:value={newTask.priority}
+								class="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+							>
+								<option value="low">Low</option>
+								<option value="medium">Medium</option>
+								<option value="high">High</option>
+							</select>
+						</div>
+
+						<div class="space-y-2">
+							<Label for="new-status">Status</Label>
+							<select
+								id="new-status"
+								name="status"
+								bind:value={newTask.status}
+								class="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+							>
+								<option value="to-do">To Do</option>
+								<option value="in-progress">In Progress</option>
+								<option value="review">Review</option>
+								<option value="done">Done</option>
+							</select>
+						</div>
 					</div>
 				</div>
-			</div>
 
-			<Dialog.Footer>
-				<Button
-					variant="outline"
-					onclick={() => {
-						showNewTaskDialog = false;
-						resetNewTask();
-					}}
-				>
-					Cancel
-				</Button>
-				<Button onclick={createTask}>Create Task</Button>
-			</Dialog.Footer>
+				<Dialog.Footer>
+					<!-- <Button
+						variant="outline"
+						onclick={() => {
+							showNewTaskDialog = false;
+							resetNewTask();
+						}}
+					>
+						Cancel
+					</Button> -->
+					<Button type="submit">Create Task</Button>
+				</Dialog.Footer>
+			</form>
 		</Dialog.Content>
 	</Dialog.Root>
 

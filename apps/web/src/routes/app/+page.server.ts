@@ -17,3 +17,42 @@ export const load = async ({ request }) => {
 
 	return { tasks };
 };
+
+export const actions = {
+	default: async ({ request }) => {
+		const client = hc<TasksRouterType>(process.env.API_URL!, {
+			init: {
+				headers: {
+					// Makes sure the session cookie is sent
+					Cookie: request.headers.get('cookie') || '',
+					'Content-Type': 'application/json',
+				}
+			}
+		});
+
+		const formData = await request.formData();
+		const title = formData.get('title') as string;
+		const description = formData.get('description') as string;
+		const status = formData.get('status') as 'to-do' | 'in-progress' | 'review' | 'done';
+		const priority = formData.get('priority') as 'low' | 'medium' | 'high';
+
+		const response = await client.tasks.add.$post({
+			json: {
+				title,
+				description,
+				status,
+				priority
+			}
+		});
+
+		console.log(response)
+
+		if (!response.ok) {
+			return { success: false, error: 'Failed to add task' };
+		}
+
+		const task = await response.json();
+
+		return { success: true, task };
+	}
+};
