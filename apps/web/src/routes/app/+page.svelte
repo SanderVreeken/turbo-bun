@@ -3,9 +3,14 @@
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index.js';
 	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
 	import KanbanBoard from '$lib/components/kanban-board.svelte';
+	import { todos } from '@/stores/todos.js';
+	import type { PageData } from './$types';
 
-	export let data;
-	console.log(data);
+	let { data }: { data: PageData } = $props();
+
+	$effect(() => {
+		todos.set(data.todos);
+	});
 </script>
 
 <Sidebar.Provider>

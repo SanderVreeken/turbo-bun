@@ -5,76 +5,21 @@
 	import Label from '$lib/components/ui/label/label.svelte';
 	import * as Dialog from '$lib/components/ui/dialog/index.js';
 	import { Plus, Pencil, Trash2 } from '@lucide/svelte';
+	import { todos } from '@/stores/todos';
+	import type { Todo } from '@repo/db/schema';
 
-	interface Task {
-		id: string;
-		title: string;
-		description: string;
-		status: 'todo' | 'in-progress' | 'review' | 'done';
-		priority: 'low' | 'medium' | 'high';
-		createdAt: Date;
-	}
+	type TodoStatus = Todo['status'];
+	type TodoPriority = Todo['priority'];
 
 	interface Column {
 		id: string;
 		title: string;
-		status: 'todo' | 'in-progress' | 'review' | 'done';
+		status: TodoStatus;
 		color: string;
 	}
 
-	let tasks: Task[] = $state([
-		{
-			id: '1',
-			title: 'Design new landing page',
-			description: 'Create wireframes and mockups for the new landing page design',
-			status: 'todo',
-			priority: 'high',
-			createdAt: new Date('2024-01-15')
-		},
-		{
-			id: '2',
-			title: 'Implement user authentication',
-			description: 'Add login and registration functionality with JWT tokens',
-			status: 'in-progress',
-			priority: 'high',
-			createdAt: new Date('2024-01-16')
-		},
-		{
-			id: '3',
-			title: 'Write API documentation',
-			description: 'Document all REST endpoints with examples and schema',
-			status: 'review',
-			priority: 'medium',
-			createdAt: new Date('2024-01-17')
-		},
-		{
-			id: '4',
-			title: 'Setup CI/CD pipeline',
-			description: 'Configure automated testing and deployment pipeline',
-			status: 'done',
-			priority: 'medium',
-			createdAt: new Date('2024-01-14')
-		},
-		{
-			id: '5',
-			title: 'Update dependencies',
-			description: 'Update all npm packages to latest stable versions',
-			status: 'todo',
-			priority: 'low',
-			createdAt: new Date('2024-01-18')
-		},
-		{
-			id: '6',
-			title: 'Fix mobile responsive issues',
-			description: 'Resolve layout problems on mobile devices',
-			status: 'in-progress',
-			priority: 'medium',
-			createdAt: new Date('2024-01-19')
-		}
-	]);
-
 	const columns: Column[] = [
-		{ id: 'todo', title: 'To Do', status: 'todo', color: '' },
+		{ id: 'to-do', title: 'To Do', status: 'to-do', color: '' },
 		{ id: 'in-progress', title: 'In Progress', status: 'in-progress', color: '' },
 		{ id: 'review', title: 'Review', status: 'review', color: '' },
 		{ id: 'done', title: 'Done', status: 'done', color: '' }
@@ -82,19 +27,19 @@
 
 	let showNewTaskDialog = $state(false);
 	let showEditTaskDialog = $state(false);
-	let editingTask: Task | null = $state(null);
+	let editingTask: Todo | null = $state(null);
 	let newTask = $state({
 		title: '',
 		description: '',
-		priority: 'medium' as Task['priority'],
-		status: 'todo' as Task['status']
+		priority: 'medium' as TodoPriority,
+		status: 'to-do' as TodoStatus
 	});
 
-	function getTasksForColumn(status: Task['status']) {
-		return tasks.filter((task) => task.status === status);
+	function getTasksForColumn(status: TodoStatus) {
+		return $todos.filter((task) => task.status === status);
 	}
 
-	function getPriorityColor(priority: Task['priority']) {
+	function getPriorityColor(priority: TodoPriority) {
 		switch (priority) {
 			case 'high':
 				return 'border-l-destructive';
@@ -107,7 +52,7 @@
 		}
 	}
 
-	function getPriorityBadgeColor(priority: Task['priority']) {
+	function getPriorityBadgeColor(priority: TodoPriority) {
 		switch (priority) {
 			case 'high':
 				return 'bg-destructive/10 text-destructive border-destructive/20';
@@ -123,40 +68,47 @@
 	function createTask() {
 		if (!newTask.title.trim()) return;
 
-		const task: Task = {
+		// TODO: Call API to create task instead of local state
+		const task: Partial<Todo> = {
 			id: Date.now().toString(),
 			title: newTask.title,
-			description: newTask.description,
+			description: newTask.description || null,
 			status: newTask.status,
 			priority: newTask.priority,
 			createdAt: new Date()
 		};
 
-		tasks = [...tasks, task];
+		todos.update((current) => [...current, task as Todo]);
 		resetNewTask();
 		showNewTaskDialog = false;
 	}
 
-	function updateTask(task: Task) {
-		const index = tasks.findIndex((t) => t.id === task.id);
-		if (index !== -1) {
-			tasks[index] = task;
-			tasks = [...tasks];
-		}
+	function updateTask(task: Todo) {
+		todos.update((current) => {
+			const index = current.findIndex((t) => t.id === task.id);
+			if (index !== -1) {
+				current[index] = task;
+				return [...current];
+			}
+			return current;
+		});
 		editingTask = null;
 		showEditTaskDialog = false;
 	}
 
 	function deleteTask(taskId: string) {
-		tasks = tasks.filter((t) => t.id !== taskId);
+		todos.update((current) => current.filter((t) => t.id !== taskId));
 	}
 
-	function moveTask(taskId: string, newStatus: Task['status']) {
-		const task = tasks.find((t) => t.id === taskId);
-		if (task) {
-			task.status = newStatus;
-			tasks = [...tasks];
-		}
+	function moveTask(taskId: string, newStatus: TodoStatus) {
+		todos.update((current) => {
+			const task = current.find((t) => t.id === taskId);
+			if (task) {
+				task.status = newStatus;
+				return [...current];
+			}
+			return current;
+		});
 	}
 
 	function resetNewTask() {
@@ -164,11 +116,11 @@
 			title: '',
 			description: '',
 			priority: 'medium',
-			status: 'todo'
+			status: 'to-do'
 		};
 	}
 
-	function startEditing(task: Task) {
+	function startEditing(task: Todo) {
 		editingTask = { ...task };
 		showEditTaskDialog = true;
 	}
@@ -188,7 +140,7 @@
 		event.preventDefault();
 	}
 
-	function handleDrop(event: DragEvent, status: Task['status']) {
+	function handleDrop(event: DragEvent, status: Todo['status']) {
 		event.preventDefault();
 		const taskId = event.dataTransfer?.getData('text/plain');
 		if (taskId) {
@@ -325,7 +277,7 @@
 							bind:value={newTask.status}
 							class="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
 						>
-							<option value="todo">To Do</option>
+							<option value="to-do">To Do</option>
 							<option value="in-progress">In Progress</option>
 							<option value="review">Review</option>
 							<option value="done">Done</option>
@@ -395,7 +347,7 @@
 								bind:value={editingTask.status}
 								class="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
 							>
-								<option value="todo">To Do</option>
+								<option value="to-do">To Do</option>
 								<option value="in-progress">In Progress</option>
 								<option value="review">Review</option>
 								<option value="done">Done</option>
