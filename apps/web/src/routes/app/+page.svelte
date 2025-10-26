@@ -3,6 +3,9 @@
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index.js';
 	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
 	import KanbanBoard from '$lib/components/kanban-board.svelte';
+
+	export let data;
+	console.log(data);
 </script>
 
 <Sidebar.Provider>
