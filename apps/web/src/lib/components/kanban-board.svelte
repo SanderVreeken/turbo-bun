@@ -65,24 +65,6 @@
 		}
 	}
 
-	// function createTask() {
-	// 	if (!newTask.title.trim()) return;
-
-	// 	// TODO: Call API to create task instead of local state
-	// 	const task: Partial<Task> = {
-	// 		id: Date.now().toString(),
-	// 		title: newTask.title,
-	// 		description: newTask.description || null,
-	// 		status: newTask.status,
-	// 		priority: newTask.priority,
-	// 		createdAt: new Date()
-	// 	};
-
-	// 	tasks.update((current) => [...current, task as Task]);
-	// 	resetNewTask();
-	// 	showNewTaskDialog = false;
-	// }
-
 	function updateTask(task: Task) {
 		tasks.update((current) => {
 			const index = current.findIndex((t) => t.id === task.id);
@@ -110,15 +92,6 @@
 			return current;
 		});
 	}
-
-	// function resetNewTask() {
-	// 	newTask = {
-	// 		title: '',
-	// 		description: '',
-	// 		priority: 'medium',
-	// 		status: 'to-do'
-	// 	};
-	// }
 
 	function startEditing(task: Task) {
 		editingTask = { ...task };
@@ -296,15 +269,6 @@
 				</div>
 
 				<Dialog.Footer>
-					<!-- <Button
-						variant="outline"
-						onclick={() => {
-							showNewTaskDialog = false;
-							resetNewTask();
-						}}
-					>
-						Cancel
-					</Button> -->
 					<Button type="submit">Create Task</Button>
 				</Dialog.Footer>
 			</form>

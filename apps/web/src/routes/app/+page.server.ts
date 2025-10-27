@@ -1,3 +1,4 @@
+import type { Task } from '@repo/db/schema';
 import type { TasksRouterType } from '@turbo-bun/api';
 import { hc } from 'hono/client';
 
@@ -25,7 +26,7 @@ export const actions = {
 				headers: {
 					// Makes sure the session cookie is sent
 					Cookie: request.headers.get('cookie') || '',
-					'Content-Type': 'application/json',
+					'Content-Type': 'application/json'
 				}
 			}
 		});
@@ -33,8 +34,8 @@ export const actions = {
 		const formData = await request.formData();
 		const title = formData.get('title') as string;
 		const description = formData.get('description') as string;
-		const status = formData.get('status') as 'to-do' | 'in-progress' | 'review' | 'done';
-		const priority = formData.get('priority') as 'low' | 'medium' | 'high';
+		const status = formData.get('status') as Task['status'];
+		const priority = formData.get('priority') as Task['priority'];
 
 		const response = await client.tasks.add.$post({
 			json: {
@@ -44,8 +45,6 @@ export const actions = {
 				priority
 			}
 		});
-
-		console.log(response)
 
 		if (!response.ok) {
 			return { success: false, error: 'Failed to add task' };
