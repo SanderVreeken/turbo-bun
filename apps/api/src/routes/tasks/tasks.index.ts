@@ -10,5 +10,6 @@ router.use(authMiddleware)
 
 router.openapi(routes.getAll, handlers.getAll)
 router.openapi(routes.add, handlers.add)
+router.openapi(routes.update, handlers.update)
 
 export default router
