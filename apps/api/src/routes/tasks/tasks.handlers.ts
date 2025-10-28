@@ -12,59 +12,28 @@ import { ZOD_ERROR_CODES, ZOD_ERROR_MESSAGES } from '@/lib/constants'
 import type { AddRoute, GetAllRoute, UpdateRoute } from './tasks.routes'
 
 export const getAll: AppRouteHandler<GetAllRoute> = async (c) => {
-  try {
-    const response = await db.query.task.findMany()
-
-    return c.json(response, HttpStatusCodes.OK)
-  }
-  catch (error) {
-    if (error instanceof HTTPException) {
-      throw error
-    }
-
-    throw new HTTPException(
-      HttpStatusCodes.INTERNAL_SERVER_ERROR,
-      {
-        message: 'Failed to create task',
-      },
-    )
-  }
+  const response = await db.query.task.findMany()
+  return c.json(response, HttpStatusCodes.OK)
 }
 
 export const add: AppRouteHandler<AddRoute> = async (c) => {
   const body = c.req.valid('json')
   const user = c.get('user')
 
-  try {
-    const response = await db.insert(task).values({
-      title: body.title,
-      description: body.description,
-      status: body.status,
-      priority: body.priority,
-      createdBy: user.id,
-    }).returning()
+  const response = await db.insert(task).values({
+    title: body.title,
+    description: body.description,
+    status: body.status,
+    priority: body.priority,
+    createdBy: user.id,
+  }).returning()
 
-    return c.json(response[0], HttpStatusCodes.OK)
-  }
-  catch (error) {
-    console.error(error)
-    if (error instanceof HTTPException) {
-      throw error
-    }
-
-    throw new HTTPException(
-      HttpStatusCodes.INTERNAL_SERVER_ERROR,
-      {
-        message: 'Failed to create task',
-      },
-    )
-  }
+  return c.json(response[0], HttpStatusCodes.OK)
 }
 
 export const update: AppRouteHandler<UpdateRoute> = async (c) => {
   const { id } = c.req.valid('param')
   const updates = c.req.valid('json')
-  // const user = c.get('user')
 
   if (Object.keys(updates).length === 0) {
     return c.json(
@@ -85,34 +54,16 @@ export const update: AppRouteHandler<UpdateRoute> = async (c) => {
     )
   }
 
-  try {
-    const [updated] = await db.update(task)
-      .set(updates)
-      .where(eq(task.id, id))
-      .returning()
+  const [updated] = await db.update(task)
+    .set(updates)
+    .where(eq(task.id, id))
+    .returning()
 
-    if (!updated) {
-      return c.json(
-        {
-          message: HttpStatusPhrases.NOT_FOUND,
-        },
-        HttpStatusCodes.NOT_FOUND,
-      )
-    }
-
-    return c.json(updated, HttpStatusCodes.OK)
+  if (!updated) {
+    throw new HTTPException(HttpStatusCodes.NOT_FOUND, {
+      message: HttpStatusPhrases.NOT_FOUND,
+    })
   }
-  catch (error) {
-    console.error(error)
-    if (error instanceof HTTPException) {
-      throw error
-    }
 
-    throw new HTTPException(
-      HttpStatusCodes.INTERNAL_SERVER_ERROR,
-      {
-        message: 'Failed to create task',
-      },
-    )
-  }
+  return c.json(updated, HttpStatusCodes.OK)
 }
